@@ -30,7 +30,7 @@ export default function Navbar() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className={cn(
                 "fixed top-0 left-0 w-full z-50 transition-all duration-300 px-6 py-4 flex justify-between items-center",
-                scrolled ? "bg-yellow-400/80 backdrop-blur-md border-b border-black/10" : "bg-transparent"
+                scrolled ? "bg-yellow-400 border-b-4 border-black shadow-neo" : "bg-transparent"
             )}
         >
             <Link href="/" className="text-2xl font-bold tracking-tighter text-black">
@@ -50,7 +50,7 @@ export default function Navbar() {
                 ))}
             </div>
 
-            <button className="md:hidden text-black uppercase text-sm font-bold">
+            <button className="md:hidden text-black uppercase text-sm font-bold border-2 border-black px-4 py-2 hover:bg-black hover:text-yellow-400 transition-all shadow-neo-sm active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
                 Menu
             </button>
         </motion.nav>

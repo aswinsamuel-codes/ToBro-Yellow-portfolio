@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import BackgroundScene from "../3d/BackgroundScene";
+import SprinkleBackground from "../ui/SprinkleBackground";
 
 const contentVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -19,7 +19,7 @@ const contentVariants = {
 export default function Hero() {
     return (
         <section className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden">
-            <BackgroundScene />
+            <SprinkleBackground />
 
             <div className="z-10 text-center px-4 max-w-5xl">
                 <motion.h1
@@ -51,7 +51,7 @@ export default function Hero() {
                 >
                     <a
                         href="#contact"
-                        className="inline-block border border-black/20 hover:border-black/60 bg-black/5 hover:bg-black/10 px-8 py-4 rounded-full text-sm uppercase tracking-widest backdrop-blur-sm transition-all duration-300 text-black"
+                        className="inline-block border-4 border-black bg-white hover:bg-black hover:text-white px-8 py-4 font-bold text-lg uppercase tracking-widest transition-all duration-200 shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none text-black"
                     >
                         Start a Project
                     </a>

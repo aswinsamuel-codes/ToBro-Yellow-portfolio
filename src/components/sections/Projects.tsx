@@ -21,7 +21,7 @@ export default function Projects() {
                     {[1, 2, 3, 4].map((item) => (
                         <motion.div
                             key={item}
-                            className="aspect-video bg-black/10 rounded-lg border border-black/10 flex items-center justify-center relative overflow-hidden group"
+                            className="aspect-video bg-white border-4 border-black shadow-neo flex items-center justify-center relative overflow-hidden group hover:shadow-neo-lg transition-all duration-200"
                             whileHover={{ scale: 0.98 }}
                         >
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">

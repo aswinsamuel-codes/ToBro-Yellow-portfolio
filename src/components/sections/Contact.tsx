@@ -30,7 +30,7 @@ export default function Contact() {
                             <a
                                 key={i}
                                 href="#"
-                                className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center text-black hover:bg-black hover:text-white transition-all duration-300"
+                                className="w-12 h-12 border-2 border-black flex items-center justify-center text-black hover:bg-black hover:text-yellow-400 transition-all duration-200 shadow-neo hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
                             >
                                 {icon}
                             </a>
@@ -44,35 +44,35 @@ export default function Contact() {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                     viewport={{ once: true }}
-                    className="bg-black/5 backdrop-blur-md p-8 rounded-3xl border border-black/10"
+                    className="bg-white p-8 border-4 border-black shadow-neo"
                 >
                     <form className="space-y-6">
                         <div>
-                            <label className="block text-sm text-black/60 mb-2">Name</label>
+                            <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Name</label>
                             <input
                                 type="text"
                                 placeholder="John Doe"
-                                className="w-full bg-white/50 border border-black/10 rounded-lg px-4 py-3 focus:outline-none focus:border-black transition-colors placeholder:text-black/30 text-black"
+                                className="w-full bg-white border-2 border-black p-3 focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30 text-black font-medium"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm text-black/60 mb-2">Email</label>
+                            <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Email</label>
                             <input
                                 type="email"
                                 placeholder="john@example.com"
-                                className="w-full bg-white/50 border border-black/10 rounded-lg px-4 py-3 focus:outline-none focus:border-black transition-colors placeholder:text-black/30 text-black"
+                                className="w-full bg-white border-2 border-black p-3 focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30 text-black font-medium"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm text-black/60 mb-2">Message</label>
+                            <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Message</label>
                             <textarea
                                 rows={4}
                                 placeholder="Tell us about your project..."
-                                className="w-full bg-white/50 border border-black/10 rounded-lg px-4 py-3 focus:outline-none focus:border-black transition-colors resize-none placeholder:text-black/30 text-black"
+                                className="w-full bg-white border-2 border-black p-3 focus:outline-none focus:shadow-neo transition-all resize-none placeholder:text-black/30 text-black font-medium"
                             />
                         </div>
 
-                        <button className="w-full bg-black text-white font-bold py-4 rounded-lg hover:bg-black/80 transition-colors flex items-center justify-center gap-2 group">
+                        <button className="w-full bg-black text-white font-bold py-4 border-2 border-black hover:bg-white hover:text-black shadow-neo hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2 group uppercase tracking-widest">
                             Send Message
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </button>

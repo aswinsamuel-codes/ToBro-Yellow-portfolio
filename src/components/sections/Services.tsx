@@ -48,8 +48,8 @@ export default function Services() {
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.1, duration: 0.5 }}
-                            whileHover={{ scale: 1.02, backgroundColor: "rgba(0,0,0,0.05)" }}
-                            className="group p-8 border border-black/10 rounded-2xl bg-black/5 backdrop-blur-sm cursor-pointer transition-colors"
+                            whileHover={{ scale: 1.02, backgroundColor: "#ffffff" }}
+                            className="group p-8 border-4 border-black bg-white shadow-neo hover:shadow-neo-lg hover:-translate-y-1 hover:-translate-x-1 transition-all duration-200 cursor-pointer"
                         >
                             <div className="mb-6 text-black group-hover:text-black/80 transition-colors">
                                 {service.icon}
