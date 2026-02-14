@@ -50,7 +50,7 @@ export default function Hero() {
                     variants={contentVariants}
                 >
                     <a
-                        href="#contact"
+                        href="/start-project"
                         className="inline-block border-4 border-black bg-white hover:bg-black hover:text-white px-8 py-4 font-bold text-lg uppercase tracking-widest transition-all duration-200 shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none text-black"
                     >
                         Start a Project
