@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import SprinkleBackground from "../ui/SprinkleBackground";
+import DoodleBackground from "../ui/DoodleBackground";
 
 const contentVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -19,7 +19,7 @@ const contentVariants = {
 export default function Hero() {
     return (
         <section className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden">
-            <SprinkleBackground />
+            <DoodleBackground />
 
             <div className="z-10 text-center px-4 max-w-5xl">
                 <motion.h1

@@ -1104,6 +1104,9 @@ video {
 .opacity-60 {
   opacity: 0.6;
 }
+.opacity-50 {
+  opacity: 0.5;
+}
 .shadow-neo {
   --tw-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
   --tw-shadow-colored: 4px 4px 0px 0px var(--tw-shadow-color);
