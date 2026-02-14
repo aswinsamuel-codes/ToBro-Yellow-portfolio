@@ -4,10 +4,8 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  /* Black text */
-  --background-start-rgb: 250, 204, 21;
-  /* Tailwind yellow-400 equivalent */
-  --background-end-rgb: 250, 204, 21;
+  --background-start-rgb: 253, 240, 213;
+  --background-end-rgb: 253, 240, 213;
 }
 
 @layer base {

@@ -30,7 +30,7 @@ export default function Contact() {
                             <a
                                 key={i}
                                 href="#"
-                                className="w-12 h-12 border-2 border-black flex items-center justify-center text-black hover:bg-black hover:text-yellow-400 transition-all duration-200 shadow-neo hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                                className="w-12 h-12 border-2 border-black flex items-center justify-center text-black hover:bg-black hover:text-cream transition-all duration-200 shadow-neo hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
                             >
                                 {icon}
                             </a>

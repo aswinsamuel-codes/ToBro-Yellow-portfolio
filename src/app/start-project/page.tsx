@@ -9,7 +9,7 @@ export default function StartProject() {
     const [budget, setBudget] = useState("5k-10k");
 
     return (
-        <main className="min-h-screen bg-yellow-400 pt-32 pb-20 px-6">
+        <main className="min-h-screen bg-cream pt-32 pb-20 px-6">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <motion.div
@@ -18,7 +18,7 @@ export default function StartProject() {
                     transition={{ duration: 0.8 }}
                     className="mb-16 text-center"
                 >
-                    <Link href="/" className="inline-block mb-8 text-black font-bold uppercase tracking-widest border-b-2 border-black hover:bg-black hover:text-yellow-400 transition-colors">
+                    <Link href="/" className="inline-block mb-8 text-black font-bold uppercase tracking-widest border-b-2 border-black hover:bg-black hover:text-cream transition-colors">
                         ← Back to Home
                     </Link>
                     <h1 className="text-5xl md:text-8xl font-bold mb-6 text-black tracking-tighter">
@@ -44,7 +44,7 @@ export default function StartProject() {
                         {/* Section 1: About You */}
                         <div>
                             <h3 className="text-2xl font-bold text-black mb-6 flex items-center gap-3">
-                                <span className="w-8 h-8 bg-black text-yellow-400 flex items-center justify-center text-sm rounded-none">01</span>
+                                <span className="w-8 h-8 bg-black text-cream flex items-center justify-center text-sm rounded-none">01</span>
                                 The Basics
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -78,7 +78,7 @@ export default function StartProject() {
                         {/* Section 2: Project Details */}
                         <div>
                             <h3 className="text-2xl font-bold text-black mb-6 flex items-center gap-3">
-                                <span className="w-8 h-8 bg-black text-yellow-400 flex items-center justify-center text-sm rounded-none">02</span>
+                                <span className="w-8 h-8 bg-black text-cream flex items-center justify-center text-sm rounded-none">02</span>
                                 Project Details
                             </h3>
                             <div className="space-y-6">
@@ -109,7 +109,7 @@ export default function StartProject() {
                         {/* Section 3: Budget & Timeline */}
                         <div>
                             <h3 className="text-2xl font-bold text-black mb-6 flex items-center gap-3">
-                                <span className="w-8 h-8 bg-black text-yellow-400 flex items-center justify-center text-sm rounded-none">03</span>
+                                <span className="w-8 h-8 bg-black text-cream flex items-center justify-center text-sm rounded-none">03</span>
                                 Budget & Timeline
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

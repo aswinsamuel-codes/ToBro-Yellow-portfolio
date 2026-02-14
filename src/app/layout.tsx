@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={cn(inter.className, "antialiased bg-yellow-400 text-black overflow-x-hidden")}>
+            <body className={cn(inter.className, "antialiased bg-cream text-black overflow-x-hidden")}>
                 {children}
             </body>
         </html>

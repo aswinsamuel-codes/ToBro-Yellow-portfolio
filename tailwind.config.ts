@@ -18,6 +18,9 @@ const config: Config = {
                 "neo-sm": "2px 2px 0px 0px rgba(0,0,0,1)",
                 "neo-lg": "8px 8px 0px 0px rgba(0,0,0,1)",
             },
+            colors: {
+                cream: "#FDF0D5",
+            },
         },
     },
     plugins: [],
