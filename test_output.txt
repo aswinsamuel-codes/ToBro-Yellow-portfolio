@@ -1,0 +1,19 @@
+"Hello World" 
+ Volume in drive D has no label.
+ Volume Serial Number is CE31-5C75
+
+ Directory of D:\ToBro\tobro web
+
+02/14/2026  11:45 AM    <DIR>          .
+02/14/2026  11:27 AM    <DIR>          ..
+02/14/2026  11:36 AM                96 next.config.mjs
+02/14/2026  11:35 AM               925 package.json
+02/14/2026  11:36 AM               101 postcss.config.js
+02/14/2026  11:38 AM             1,312 README.md
+02/14/2026  11:36 AM    <DIR>          src
+02/14/2026  11:36 AM               598 tailwind.config.ts
+02/14/2026  11:35 AM                73 test.bat
+02/14/2026  11:45 AM                16 test_output.txt
+02/14/2026  11:35 AM               841 tsconfig.json
+               8 File(s)          3,962 bytes
+               3 Dir(s)  30,651,392,000 bytes free
