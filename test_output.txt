@@ -1,19 +1,24 @@
 "Hello World" 
- Volume in drive D has no label.
- Volume Serial Number is CE31-5C75
+ Volume in drive E is New Volume
+ Volume Serial Number is 1484-382F
 
- Directory of D:\ToBro\tobro web
+ Directory of E:\Projects\ToBro-Yellow\ToBro-Yellow-portfolio
 
-02/14/2026  11:45 AM    <DIR>          .
-02/14/2026  11:27 AM    <DIR>          ..
-02/14/2026  11:36 AM                96 next.config.mjs
-02/14/2026  11:35 AM               925 package.json
-02/14/2026  11:36 AM               101 postcss.config.js
-02/14/2026  11:38 AM             1,312 README.md
-02/14/2026  11:36 AM    <DIR>          src
-02/14/2026  11:36 AM               598 tailwind.config.ts
-02/14/2026  11:35 AM                73 test.bat
-02/14/2026  11:45 AM                16 test_output.txt
-02/14/2026  11:35 AM               841 tsconfig.json
-               8 File(s)          3,962 bytes
-               3 Dir(s)  30,651,392,000 bytes free
+14-02-2026  05:03 PM    <DIR>          .
+14-02-2026  04:57 PM    <DIR>          ..
+14-02-2026  04:58 PM                14 .gitignore
+15-02-2026  06:01 PM    <DIR>          .next
+14-02-2026  04:58 PM               206 next-env.d.ts
+14-02-2026  04:58 PM                96 next.config.mjs
+14-02-2026  05:04 PM    <DIR>          node_modules
+14-02-2026  05:04 PM           250,795 package-lock.json
+14-02-2026  04:58 PM               925 package.json
+14-02-2026  04:58 PM               101 postcss.config.js
+14-02-2026  04:58 PM             1,312 README.md
+14-02-2026  04:58 PM    <DIR>          src
+14-02-2026  05:21 PM             1,487 tailwind.config.ts
+14-02-2026  04:58 PM                73 test.bat
+15-02-2026  06:46 PM                16 test_output.txt
+14-02-2026  04:58 PM               841 tsconfig.json
+              11 File(s)        255,866 bytes
+               5 Dir(s)  246,405,697,536 bytes free
