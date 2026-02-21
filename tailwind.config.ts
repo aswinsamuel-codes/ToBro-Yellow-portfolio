@@ -8,18 +8,26 @@ const config: Config = {
     ],
     theme: {
         extend: {
-            backgroundImage: {
-                "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-                "gradient-conic":
-                    "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+            colors: {
+                background: "#F5F5F7", // Apple Light Gray
+                surface: "#FFFFFF",
+                primary: "#1D1D1F", // Apple Dark Gray
+                secondary: "#86868B", // Apple Medium Gray
+                accent: "#0071E3", // Apple Blue
+                "accent-hover": "#0077ED",
+            },
+            fontFamily: {
+                sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
             },
             boxShadow: {
-                neo: "4px 4px 0px 0px rgba(0,0,0,1)",
-                "neo-sm": "2px 2px 0px 0px rgba(0,0,0,1)",
-                "neo-lg": "8px 8px 0px 0px rgba(0,0,0,1)",
+                "apple": "0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)",
+                "apple-hover": "0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)",
+                "apple-card": "0 0 20px rgba(0, 0, 0, 0.04)",
+                "apple-glass": "0 8px 32px 0 rgba(31, 38, 135, 0.07)",
             },
-            colors: {
-                cream: "#FDF0D5",
+            backgroundImage: {
+                "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+                "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
             },
         },
     },

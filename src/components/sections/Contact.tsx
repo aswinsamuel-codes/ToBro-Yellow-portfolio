@@ -1,9 +1,43 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Mail, Instagram, Linkedin, Twitter } from "lucide-react";
+import { ArrowRight, Mail, Instagram, Linkedin, Twitter, Check } from "lucide-react";
 
 export default function Contact() {
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        message: ""
+    });
+    const [submitted, setSubmitted] = useState(false);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const newQuery = {
+            id: Date.now().toString(),
+            name: formData.name,
+            email: formData.email,
+            company: "N/A", // Default for general contact
+            services: ["General Inquiry"],
+            description: formData.message,
+            budget: "Basic",
+            timeline: "N/A",
+            status: "Pending",
+            date: new Date().toISOString().split('T')[0]
+        };
+
+        const existingQueries = JSON.parse(localStorage.getItem("projectQueries") || "[]");
+        localStorage.setItem("projectQueries", JSON.stringify([newQuery, ...existingQueries]));
+
+        setSubmitted(true);
+        setFormData({ name: "", email: "", message: "" });
+
+        // Reset success message after 5 seconds
+        setTimeout(() => setSubmitted(false), 5000);
+    };
+
     return (
         <section id="contact" className="min-h-screen py-24 px-6 flex items-center justify-center relative overflow-hidden">
 
@@ -19,9 +53,9 @@ export default function Contact() {
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
                 >
-                    <span className="text-black uppercase tracking-widest text-sm mb-4 block">Get in Touch</span>
-                    <h2 className="text-5xl md:text-7xl font-bold mb-8">Let's build something <br /> extraordinary.</h2>
-                    <p className="text-black/70 text-lg mb-12">
+                    <span className="text-gray-900 uppercase tracking-widest text-sm mb-4 block">Get in Touch</span>
+                    <h2 className="text-5xl md:text-7xl font-bold mb-8 text-gray-900">Let's build something <br /> extraordinary.</h2>
+                    <p className="text-gray-600 text-lg mb-12">
                         Have an idea? We'd love to hear about it. Reach out to us and let's start the conversation.
                     </p>
 
@@ -30,7 +64,7 @@ export default function Contact() {
                             <a
                                 key={i}
                                 href="#"
-                                className="w-12 h-12 border-2 border-black flex items-center justify-center text-black hover:bg-black hover:text-cream transition-all duration-200 shadow-neo hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                                className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gray-900 hover:bg-black hover:text-white transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1 border border-gray-200"
                             >
                                 {icon}
                             </a>
@@ -44,35 +78,64 @@ export default function Contact() {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                     viewport={{ once: true }}
-                    className="bg-white p-8 border-4 border-black shadow-neo"
+                    className="bg-white p-8 rounded-2xl shadow-professional border border-gray-100 relative overflow-hidden"
                 >
-                    <form className="space-y-6">
+                    {submitted ? (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="absolute inset-0 flex flex-col items-center justify-center bg-white z-10 p-8 text-center"
+                        >
+                            <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                                <Check className="w-8 h-8" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h3>
+                            <p className="text-gray-500">Thanks for reaching out. We'll get back to you shortly.</p>
+                            <button
+                                onClick={() => setSubmitted(false)}
+                                className="mt-6 text-sm font-medium text-gray-900 hover:text-black underline"
+                            >
+                                Send another message
+                            </button>
+                        </motion.div>
+                    ) : null}
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Name</label>
+                            <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Name</label>
                             <input
                                 type="text"
+                                required
                                 placeholder="John Doe"
-                                className="w-full bg-white border-2 border-black p-3 focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30 text-black font-medium"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all placeholder:text-gray-400 text-gray-900 font-medium"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Email</label>
+                            <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Email</label>
                             <input
                                 type="email"
+                                required
                                 placeholder="john@example.com"
-                                className="w-full bg-white border-2 border-black p-3 focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30 text-black font-medium"
+                                value={formData.email}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all placeholder:text-gray-400 text-gray-900 font-medium"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Message</label>
+                            <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Message</label>
                             <textarea
                                 rows={4}
+                                required
                                 placeholder="Tell us about your project..."
-                                className="w-full bg-white border-2 border-black p-3 focus:outline-none focus:shadow-neo transition-all resize-none placeholder:text-black/30 text-black font-medium"
+                                value={formData.message}
+                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all resize-none placeholder:text-gray-400 text-gray-900 font-medium"
                             />
                         </div>
 
-                        <button className="w-full bg-black text-white font-bold py-4 border-2 border-black hover:bg-white hover:text-black shadow-neo hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2 group uppercase tracking-widest">
+                        <button type="submit" className="w-full bg-black text-white font-bold py-4 rounded-xl shadow-professional hover:shadow-professional-hover hover:-translate-y-1 transition-all flex items-center justify-center gap-2 group uppercase tracking-widest">
                             Send Message
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </button>

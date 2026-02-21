@@ -6,70 +6,138 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function StartProject() {
-    const [budget, setBudget] = useState("5k-10k");
+    const [budget, setBudget] = useState("₹15,000 – ₹50,000 (Starter)");
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        company: "",
+        description: "",
+        timeline: ""
+    });
+    const [services, setServices] = useState<string[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleServiceToggle = (service: string) => {
+        setServices(prev =>
+            prev.includes(service)
+                ? prev.filter(s => s !== service)
+                : [...prev, service]
+        );
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        // Simulate network delay
+        setTimeout(() => {
+            const newQuery = {
+                id: Date.now().toString(),
+                ...formData,
+                services,
+                budget,
+                status: "Pending",
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            const existingQueries = JSON.parse(localStorage.getItem("projectQueries") || "[]");
+            localStorage.setItem("projectQueries", JSON.stringify([newQuery, ...existingQueries]));
+
+            setIsSubmitting(false);
+            setIsSuccess(true);
+
+            // Reset form
+            setFormData({ name: "", email: "", company: "", description: "", timeline: "" });
+            setServices([]);
+            setBudget("₹35,000 – ₹70,000 (Starter)");
+
+            // Reset success message after 3 seconds
+            setTimeout(() => setIsSuccess(false), 3000);
+        }, 1000);
+    };
 
     return (
-        <main className="min-h-screen bg-cream pt-32 pb-20 px-6">
-            <div className="max-w-4xl mx-auto">
+        <main className="min-h-screen bg-[#F5F5F7] pt-32 pb-20 px-6">
+            <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
-                    className="mb-16 text-center"
+                    className="mb-12 text-center"
                 >
-                    <Link href="/" className="inline-block mb-8 text-black font-bold uppercase tracking-widest border-b-2 border-black hover:bg-black hover:text-cream transition-colors">
-                        ← Back to Home
+                    <Link href="/" className="inline-flex items-center gap-2 text-secondary hover:text-primary transition-colors text-sm font-medium mb-8">
+                        <ArrowRight className="w-4 h-4 rotate-180" /> Back to Home
                     </Link>
-                    <h1 className="text-5xl md:text-8xl font-bold mb-6 text-black tracking-tighter">
-                        START YOUR <br /> PROJECT
+                    <h1 className="text-4xl md:text-6xl font-semibold mb-4 text-primary tracking-tight">
+                        Start your project.
                     </h1>
-                    <p className="text-xl text-black/70 max-w-2xl mx-auto">
+                    <p className="text-xl text-secondary max-w-xl mx-auto">
                         Tell us about your vision. We'll help you build it.
                     </p>
                 </motion.div>
 
                 {/* Form Container */}
                 <motion.div
-                    initial={{ opacity: 0, y: 50 }}
+                    initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="bg-white border-4 border-black shadow-neo p-8 md:p-12 relative"
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="bg-white rounded-[32px] shadow-apple p-8 md:p-12 border border-white/50 relative overflow-hidden"
                 >
-                    {/* Decorative Elements */}
-                    <div className="absolute -top-4 -right-4 w-8 h-8 bg-black" />
-                    <div className="absolute -bottom-4 -left-4 w-8 h-8 bg-black" />
+                    {isSuccess && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="absolute top-0 left-0 w-full bg-green-500 text-white p-4 text-center font-medium z-10 flex items-center justify-center gap-2"
+                        >
+                            <CheckCircle2 className="w-5 h-5" /> Request Submitted Successfully!
+                        </motion.div>
+                    )}
 
-                    <form className="space-y-12">
+                    <form onSubmit={handleSubmit} className="space-y-12">
                         {/* Section 1: About You */}
                         <div>
-                            <h3 className="text-2xl font-bold text-black mb-6 flex items-center gap-3">
-                                <span className="w-8 h-8 bg-black text-cream flex items-center justify-center text-sm rounded-none">01</span>
-                                The Basics
-                            </h3>
+                            <h3 className="text-xl font-semibold text-primary mb-6">The Basics</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Name</label>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-secondary ml-1">Name</label>
                                     <input
                                         type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        required
                                         placeholder="Your Name"
-                                        className="w-full bg-white border-2 border-black p-4 focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30 text-black font-medium"
+                                        className="w-full bg-[#F5F5F7] border-none rounded-xl p-4 text-primary placeholder:text-gray-400 focus:ring-2 focus:ring-accent/20 transition-all"
                                     />
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Email</label>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-secondary ml-1">Email</label>
                                     <input
                                         type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        required
                                         placeholder="your@email.com"
-                                        className="w-full bg-white border-2 border-black p-4 focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30 text-black font-medium"
+                                        className="w-full bg-[#F5F5F7] border-none rounded-xl p-4 text-primary placeholder:text-gray-400 focus:ring-2 focus:ring-accent/20 transition-all"
                                     />
                                 </div>
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Company / Organization</label>
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-sm font-medium text-secondary ml-1">Company</label>
                                     <input
                                         type="text"
-                                        placeholder="Company Name (Optional)"
-                                        className="w-full bg-white border-2 border-black p-4 focus:outline-none focus:shadow-neo transition-all placeholder:text-black/30 text-black font-medium"
+                                        name="company"
+                                        value={formData.company}
+                                        onChange={handleInputChange}
+                                        placeholder="Company Name"
+                                        className="w-full bg-[#F5F5F7] border-none rounded-xl p-4 text-primary placeholder:text-gray-400 focus:ring-2 focus:ring-accent/20 transition-all"
                                     />
                                 </div>
                             </div>
@@ -77,81 +145,94 @@ export default function StartProject() {
 
                         {/* Section 2: Project Details */}
                         <div>
-                            <h3 className="text-2xl font-bold text-black mb-6 flex items-center gap-3">
-                                <span className="w-8 h-8 bg-black text-cream flex items-center justify-center text-sm rounded-none">02</span>
-                                Project Details
-                            </h3>
+                            <h3 className="text-xl font-semibold text-primary mb-6">Project Details</h3>
                             <div className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">What do you need?</label>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                        {["Web Design", "Development", "Branding", "Marketing", "E-Commerce", "Other"].map((item) => (
+                                <div className="space-y-3">
+                                    <label className="text-sm font-medium text-secondary ml-1">What is Required?</label>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        {["Web Design", "Digital Marketing", "SEO", "Content Creation", "Branding", "App Development"].map((item) => (
                                             <label key={item} className="cursor-pointer group">
-                                                <input type="checkbox" className="hidden peer" />
-                                                <div className="border-2 border-black p-4 text-center font-bold text-black peer-checked:bg-black peer-checked:text-white hover:shadow-neo transition-all">
+                                                <input
+                                                    type="checkbox"
+                                                    className="hidden peer"
+                                                    checked={services.includes(item)}
+                                                    onChange={() => handleServiceToggle(item)}
+                                                />
+                                                <div className="border border-gray-100 bg-white rounded-xl p-4 text-center text-sm font-medium text-secondary peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary hover:border-gray-300 transition-all">
                                                     {item}
                                                 </div>
                                             </label>
                                         ))}
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Project Description</label>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                        <label className="text-sm font-medium text-secondary ml-1">About the Project</label>
+                                        <span className="text-xs text-gray-400">{formData.description.length}/300</span>
+                                    </div>
                                     <textarea
-                                        rows={6}
-                                        placeholder="Tell us about your project goals, target audience, and any specific requirements..."
-                                        className="w-full bg-white border-2 border-black p-4 focus:outline-none focus:shadow-neo transition-all resize-none placeholder:text-black/30 text-black font-medium"
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleInputChange}
+                                        rows={5}
+                                        maxLength={300}
+                                        placeholder="Tell us about your project goals..."
+                                        className="w-full bg-[#F5F5F7] border-none rounded-xl p-4 text-primary placeholder:text-gray-400 focus:ring-2 focus:ring-accent/20 transition-all resize-none"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-secondary ml-1">Timeline</label>
+                                    <input
+                                        type="text"
+                                        name="timeline"
+                                        value={formData.timeline}
+                                        onChange={handleInputChange}
+                                        placeholder="e.g. 2 months, ASAP"
+                                        className="w-full bg-[#F5F5F7] border-none rounded-xl p-4 text-primary placeholder:text-gray-400 focus:ring-2 focus:ring-accent/20 transition-all"
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Section 3: Budget & Timeline */}
+                        {/* Section 3: Budget Selection */}
                         <div>
-                            <h3 className="text-2xl font-bold text-black mb-6 flex items-center gap-3">
-                                <span className="w-8 h-8 bg-black text-cream flex items-center justify-center text-sm rounded-none">03</span>
-                                Budget & Timeline
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div>
-                                    <label className="block text-sm font-bold text-black mb-4 uppercase tracking-wide">Estimated Budget</label>
-                                    <div className="space-y-3">
-                                        {["<$5k", "$5k - $10k", "$10k - $25k", "$25k - $50k", "$50k+"].map((range) => (
-                                            <label key={range} className="flex items-center gap-3 cursor-pointer group">
-                                                <div className={`w-6 h-6 border-2 border-black flex items-center justify-center ${budget === range ? "bg-black" : "bg-white"}`}>
-                                                    {budget === range && <CheckCircle2 className="w-4 h-4 text-white" />}
-                                                </div>
-                                                <input
-                                                    type="radio"
-                                                    name="budget"
-                                                    value={range}
-                                                    checked={budget === range}
-                                                    onChange={() => setBudget(range)}
-                                                    className="hidden"
-                                                />
-                                                <span className="font-bold text-black group-hover:translate-x-1 transition-transform">{range}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-black mb-2 uppercase tracking-wide">Expected Timeline</label>
-                                    <select className="w-full bg-white border-2 border-black p-4 focus:outline-none focus:shadow-neo transition-all text-black font-medium appearance-none cursor-pointer">
-                                        <option>Select a timeline...</option>
-                                        <option>ASAP (Rush)</option>
-                                        <option>1 - 2 Months</option>
-                                        <option>3 - 6 Months</option>
-                                        <option>Flexible</option>
-                                    </select>
-                                </div>
+                            <h3 className="text-xl font-semibold text-primary mb-6">Budget Selection</h3>
+                            <div className="grid grid-cols-1 gap-4">
+                                {[
+                                    { label: "₹35,000 – ₹70,000", tag: "Starter", desc: "Ideal for local businesses, landing pages & basic SEO" },
+                                    { label: "₹70,000 – ₹2,00,000", tag: "Growth", desc: "Best for growing brands needing full web + marketing" },
+                                    { label: "₹2,00,000+", tag: "Enterprise", desc: "End-to-end solutions for established & scaling businesses" },
+                                ].map((range) => (
+                                    <label key={range.tag} className="flex items-start gap-4 cursor-pointer group p-5 border rounded-xl hover:border-accent transition-colors bg-[#F5F5F7] has-[:checked]:border-accent has-[:checked]:bg-accent/5">
+                                        <input
+                                            type="radio"
+                                            name="budget"
+                                            value={`${range.label} (${range.tag})`}
+                                            checked={budget === `${range.label} (${range.tag})`}
+                                            onChange={() => setBudget(`${range.label} (${range.tag})`)}
+                                            className="w-4 h-4 text-accent border-gray-300 focus:ring-accent mt-1"
+                                        />
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <span className={`text-base font-bold ${budget === `${range.label} (${range.tag})` ? "text-primary" : "text-secondary"}`}>{range.label}</span>
+                                                <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full font-medium">{range.tag}</span>
+                                            </div>
+                                            <p className="text-sm text-gray-400 mt-1">{range.desc}</p>
+                                        </div>
+                                    </label>
+                                ))}
                             </div>
                         </div>
 
                         {/* Submit */}
-                        <div className="pt-8 border-t-2 border-black/10">
-                            <button className="w-full bg-black text-white text-xl font-bold py-6 border-2 border-black hover:bg-white hover:text-black shadow-neo hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-3 group uppercase tracking-widest">
-                                Submit Project Brief
-                                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                        <div className="pt-6">
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="w-full bg-accent text-white text-lg font-medium py-4 rounded-xl shadow-lg hover:shadow-xl hover:bg-accent-hover transition-all flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                            >
+                                {isSubmitting ? "Submitting..." : "Submit Request"}
+                                {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                             </button>
                         </div>
                     </form>
