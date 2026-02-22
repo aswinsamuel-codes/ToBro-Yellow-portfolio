@@ -31,13 +31,6 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                     <div className="col-span-1 md:col-span-1">
                         <Link href="/" className="flex items-center gap-2 mb-6 group">
-                            <Image
-                                src="/logo.svg"
-                                alt="ToBro Logo"
-                                width={80}
-                                height={32}
-                                className="h-8 w-auto object-contain"
-                            />
                             <span className="text-xl font-semibold tracking-tight text-primary">
                                 ToBro<span className="text-secondary">.</span>
                             </span>

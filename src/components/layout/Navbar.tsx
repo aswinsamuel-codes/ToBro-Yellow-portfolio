@@ -59,14 +59,6 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2">
-                    <Image
-                        src="/logo.svg"
-                        alt="ToBro Logo"
-                        width={180}
-                        height={60}
-                        className="h-12 w-auto object-contain"
-                        priority
-                    />
                     <span className="text-2xl font-bold tracking-tight text-[#1d1d1f]">
                         ToBro<span className="text-gray-400">.</span>
                     </span>
