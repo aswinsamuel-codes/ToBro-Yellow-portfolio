@@ -60,13 +60,19 @@ export default function Contact() {
                     </p>
 
                     <div className="flex gap-6">
-                        {[<Instagram key="i" />, <Linkedin key="l" />, <Twitter key="t" />].map((icon, i) => (
+                        {[
+                            { icon: <Instagram />, href: "https://www.instagram.com/tobro.agency?igsh=MTIyaGR1dnFydzY5Yw==" },
+                            { icon: <Linkedin />, href: "https://www.linkedin.com/in/tobroagency" },
+                            { icon: <Twitter />, href: "#" }
+                        ].map((item, i) => (
                             <a
                                 key={i}
-                                href="#"
+                                href={item.href}
+                                target={item.href !== "#" ? "_blank" : undefined}
+                                rel={item.href !== "#" ? "noopener noreferrer" : undefined}
                                 className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gray-900 hover:bg-black hover:text-white transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1 border border-gray-200"
                             >
-                                {icon}
+                                {item.icon}
                             </a>
                         ))}
                     </div>

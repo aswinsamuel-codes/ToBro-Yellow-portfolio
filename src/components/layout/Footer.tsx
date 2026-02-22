@@ -14,9 +14,9 @@ export default function Footer() {
                             <Image
                                 src="/logo.png"
                                 alt="ToBro Logo"
-                                width={32}
+                                width={80}
                                 height={32}
-                                className="w-8 h-auto"
+                                className="h-8 w-auto object-contain"
                             />
                             <span className="text-xl font-semibold tracking-tight text-primary">
                                 ToBro<span className="text-secondary">.</span>
