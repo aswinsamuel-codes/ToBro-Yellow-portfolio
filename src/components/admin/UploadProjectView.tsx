@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Upload, Trash2, Save, Image, FolderOpen } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface UpcomingProject {
     id: string;
@@ -32,36 +33,84 @@ export default function UploadProjectView() {
     const [isSaved, setIsSaved] = useState(false);
 
     useEffect(() => {
-        const stored = localStorage.getItem("upcomingProjects");
-        if (stored) setProjects(JSON.parse(stored));
+        const fetchProjects = async () => {
+            const { data, error } = await supabase
+                .from('upcoming_projects')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching projects:', error);
+                return;
+            }
+
+            const formatted: UpcomingProject[] = data.map(p => ({
+                id: p.id,
+                title: p.title,
+                category: p.category || "",
+                description: p.description || "",
+                gradient: p.gradient || GRADIENT_OPTIONS[0].value,
+                date: p.created_at ? p.created_at.split('T')[0] : ""
+            }));
+
+            setProjects(formatted);
+        };
+
+        fetchProjects();
+
+        // Realtime subscription
+        const channel = supabase
+            .channel('upcoming-projects-sync')
+            .on('postgres_changes',
+                { event: '*', schema: 'public', table: 'upcoming_projects' },
+                () => fetchProjects()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!form.title || !form.category || !form.description) return;
 
-        const newProject: UpcomingProject = {
-            id: Date.now().toString(),
-            ...form,
-            date: new Date().toISOString().split("T")[0],
-        };
+        const { error } = await supabase
+            .from('upcoming_projects')
+            .insert([{
+                title: form.title,
+                category: form.category,
+                description: form.description,
+                gradient: form.gradient,
+            }]);
 
-        const updated = [newProject, ...projects];
-        setProjects(updated);
-        localStorage.setItem("upcomingProjects", JSON.stringify(updated));
+        if (error) {
+            console.error('Error publishing project:', error);
+            alert('Failed to publish project.');
+            return;
+        }
 
         setForm({ title: "", category: "", description: "", gradient: GRADIENT_OPTIONS[0].value });
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 2500);
     };
 
-    const handleDelete = (id: string) => {
-        const updated = projects.filter(p => p.id !== id);
-        setProjects(updated);
-        localStorage.setItem("upcomingProjects", JSON.stringify(updated));
+    const handleDelete = async (id: string) => {
+        if (!confirm("Delete this project?")) return;
+
+        const { error } = await supabase
+            .from('upcoming_projects')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting project:', error);
+            alert('Failed to delete.');
+        }
     };
 
     return (

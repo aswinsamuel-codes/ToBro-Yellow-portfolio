@@ -26,15 +26,15 @@ export default function AdminLogin() {
             const user = storedUsers.find(u => u.email === email && u.password === password);
 
             if (user) {
-                localStorage.setItem("isAdminAuthenticated", "true");
-                localStorage.setItem("adminRole", user.role);
-                localStorage.setItem("adminEmail", user.email);
+                sessionStorage.setItem("isAdminAuthenticated", "true");
+                sessionStorage.setItem("adminRole", user.role);
+                sessionStorage.setItem("adminEmail", user.email);
                 router.push("/admin");
             } else if (email === "melvin@tobro.com" && password === "admin123") {
                 // Hardcoded fallback for the main admin if storage is empty
-                localStorage.setItem("isAdminAuthenticated", "true");
-                localStorage.setItem("adminRole", "Admin");
-                localStorage.setItem("adminEmail", "melvin@tobro.com");
+                sessionStorage.setItem("isAdminAuthenticated", "true");
+                sessionStorage.setItem("adminRole", "Admin");
+                sessionStorage.setItem("adminEmail", "melvin@tobro.com");
                 router.push("/admin");
             } else {
                 setError("Invalid email or password. Please try again.");
@@ -105,16 +105,6 @@ export default function AdminLogin() {
                             )}
                         </button>
                     </form>
-
-                    {/* Credentials Hint */}
-                    <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3">
-                        <Info className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-                        <div className="text-xs text-blue-700 space-y-1">
-                            <p className="font-semibold">Admin Credentials</p>
-                            <p>Email: <span className="font-mono font-bold select-all">melvin@tobro.com</span></p>
-                            <p>Password: <span className="font-mono font-bold select-all">admin123</span></p>
-                        </div>
-                    </div>
 
                     <div className="mt-6 pt-4 border-t border-gray-100 text-center">
                         <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors">

@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -16,34 +17,37 @@ export default function Navbar() {
             setScrolled(window.scrollY > 50);
         };
 
-        const checkBanner = () => {
-            const stored = localStorage.getItem("siteAnnouncement");
-            if (stored) {
-                const parsed = JSON.parse(stored);
-                setHasBanner(parsed && parsed.active);
+        const checkBanner = async () => {
+            const { data, error } = await supabase
+                .from('announcements')
+                .select('active')
+                .maybeSingle();
+
+            if (!error && data) {
+                setHasBanner(data.active);
             } else {
                 setHasBanner(false);
             }
         };
 
-        const handleKeyDown = (e: KeyboardEvent) => {
-            // Secret Shortcut: Shift + A
-            if (e.shiftKey && e.key.toLowerCase() === "a") {
-                router.push("/admin");
-            }
-        };
-
         window.addEventListener("scroll", handleScroll);
-        window.addEventListener("keydown", handleKeyDown);
+
         checkBanner();
-        const interval = setInterval(checkBanner, 2000);
+
+        // Realtime sync for banner presence
+        const channel = supabase
+            .channel('navbar-announcement-sync')
+            .on('postgres_changes',
+                { event: '*', schema: 'public', table: 'announcements' },
+                () => checkBanner()
+            )
+            .subscribe();
 
         return () => {
             window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("keydown", handleKeyDown);
-            clearInterval(interval);
+            supabase.removeChannel(channel);
         };
-    }, [router]);
+    }, []);
 
     if (pathname?.startsWith("/admin")) return null;
 
@@ -54,8 +58,18 @@ export default function Navbar() {
         >
             <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="text-2xl font-bold tracking-tight text-[#1d1d1f]">
-                    ToBro<span className="text-gray-400">.</span>
+                <Link href="/" className="flex items-center gap-2">
+                    <Image
+                        src="/logo.svg"
+                        alt="ToBro Logo"
+                        width={180}
+                        height={60}
+                        className="h-12 w-auto object-contain"
+                        priority
+                    />
+                    <span className="text-2xl font-bold tracking-tight text-[#1d1d1f]">
+                        ToBro<span className="text-gray-400">.</span>
+                    </span>
                 </Link>
 
                 {/* Desktop Nav */}

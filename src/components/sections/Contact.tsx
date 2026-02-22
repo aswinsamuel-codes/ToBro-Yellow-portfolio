@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Mail, Instagram, Linkedin, Twitter, Check } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function Contact() {
     const [formData, setFormData] = useState({
@@ -12,24 +13,22 @@ export default function Contact() {
     });
     const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const newQuery = {
-            id: Date.now().toString(),
+        const { error } = await supabase.from('queries').insert([{
             name: formData.name,
             email: formData.email,
-            company: "N/A", // Default for general contact
-            services: ["General Inquiry"],
-            description: formData.message,
+            message: formData.message,
+            service: "General Inquiry",
             budget: "Basic",
-            timeline: "N/A",
-            status: "Pending",
-            date: new Date().toISOString().split('T')[0]
-        };
+        }]);
 
-        const existingQueries = JSON.parse(localStorage.getItem("projectQueries") || "[]");
-        localStorage.setItem("projectQueries", JSON.stringify([newQuery, ...existingQueries]));
+        if (error) {
+            console.error('Error saving query:', error);
+            alert('Failed to send message. Please try again.');
+            return;
+        }
 
         setSubmitted(true);
         setFormData({ name: "", email: "", message: "" });
@@ -60,13 +59,19 @@ export default function Contact() {
                     </p>
 
                     <div className="flex gap-6">
-                        {[<Instagram key="i" />, <Linkedin key="l" />, <Twitter key="t" />].map((icon, i) => (
+                        {[
+                            { icon: <Instagram />, href: "https://www.instagram.com/tobro.agency?igsh=MTIyaGR1dnFydzY5Yw==" },
+                            { icon: <Linkedin />, href: "https://www.linkedin.com/in/tobroagency" },
+                            { icon: <Twitter />, href: "#" }
+                        ].map((item, i) => (
                             <a
                                 key={i}
-                                href="#"
+                                href={item.href}
+                                target={item.href !== "#" ? "_blank" : undefined}
+                                rel={item.href !== "#" ? "noopener noreferrer" : undefined}
                                 className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gray-900 hover:bg-black hover:text-white transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1 border border-gray-200"
                             >
-                                {icon}
+                                {item.icon}
                             </a>
                         ))}
                     </div>

@@ -1,16 +1,46 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Twitter, Instagram, Linkedin, Github, Lock } from "lucide-react";
 
 export default function Footer() {
+    const [clicks, setClicks] = useState(0);
+    const router = useRouter();
+
+    const handleSecretClick = (e: React.MouseEvent) => {
+        if (e.detail > 0) {
+            setClicks(prev => {
+                const next = prev + 1;
+                if (next === 3) {
+                    router.push("/admin");
+                    return 0;
+                }
+                return next;
+            });
+            const timeout = setTimeout(() => setClicks(0), 1000);
+            return () => clearTimeout(timeout);
+        }
+    };
+
     return (
         <footer className="bg-white border-t border-gray-100 py-16 px-6">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                     <div className="col-span-1 md:col-span-1">
-                        <Link href="/" className="text-xl font-semibold tracking-tight text-primary mb-6 block">
-                            ToBro<span className="text-secondary">.</span>
+                        <Link href="/" className="flex items-center gap-2 mb-6 group">
+                            <Image
+                                src="/logo.svg"
+                                alt="ToBro Logo"
+                                width={80}
+                                height={32}
+                                className="h-8 w-auto object-contain"
+                            />
+                            <span className="text-xl font-semibold tracking-tight text-primary">
+                                ToBro<span className="text-secondary">.</span>
+                            </span>
                         </Link>
                         <p className="text-secondary text-sm leading-relaxed max-w-xs">
                             Premium digital experiences for forward-thinking brands. We build the future.
@@ -43,10 +73,10 @@ export default function Footer() {
                             <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
                                 <Twitter className="w-4 h-4" />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
+                            <a href="https://www.instagram.com/tobro.agency?igsh=MTIyaGR1dnFydzY5Yw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
                                 <Instagram className="w-4 h-4" />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
+                            <a href="https://www.linkedin.com/in/tobroagency" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
                                 <Linkedin className="w-4 h-4" />
                             </a>
                             <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
@@ -61,7 +91,12 @@ export default function Footer() {
                         &copy; {new Date().getFullYear()} ToBro Agency. All rights reserved.
                     </p>
                     <div className="flex gap-8 text-xs text-secondary">
-                        <Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link>
+                        <span
+                            onClick={handleSecretClick}
+                            className="hover:text-primary transition-colors cursor-pointer select-none"
+                        >
+                            Privacy Policy
+                        </span>
                         <Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link>
                     </div>
                 </div>

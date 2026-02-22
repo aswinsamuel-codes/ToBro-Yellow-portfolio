@@ -21,8 +21,7 @@ interface ProjectQuery {
     date: string;
 }
 
-export default function AnalyticsView() {
-    const [queries, setQueries] = useState<ProjectQuery[]>([]);
+export default function AnalyticsView({ queries }: { queries: ProjectQuery[] }) {
     const [stats, setStats] = useState({
         total: 0,
         booked: 0,
@@ -35,22 +34,19 @@ export default function AnalyticsView() {
     });
 
     useEffect(() => {
-        const stored = JSON.parse(localStorage.getItem("projectQueries") || "[]");
-        setQueries(stored);
-
         // Calculate Stats
-        const total = stored.length;
-        const booked = stored.filter((q: any) => q.status === "Booked").length;
-        const completed = stored.filter((q: any) => q.status === "Completed").length;
-        const pending = stored.filter((q: any) => q.status === "Pending").length;
-        const rejected = stored.filter((q: any) => q.status === "Rejected").length;
+        const total = queries.length;
+        const booked = queries.filter((q: any) => q.status === "Booked").length;
+        const completed = queries.filter((q: any) => q.status === "Completed").length;
+        const pending = queries.filter((q: any) => q.status === "Pending").length;
+        const rejected = queries.filter((q: any) => q.status === "Rejected").length;
 
         const conversionRate = total > 0 ? ((booked + completed) / total) * 100 : 0;
 
         const serviceDist: Record<string, number> = {};
         const budgetDist: Record<string, number> = {};
 
-        stored.forEach((q: any) => {
+        queries.forEach((q: any) => {
             q.services?.forEach((s: string) => {
                 serviceDist[s] = (serviceDist[s] || 0) + 1;
             });
@@ -67,7 +63,7 @@ export default function AnalyticsView() {
             serviceDistribution: serviceDist,
             budgetDistribution: budgetDist
         });
-    }, []);
+    }, [queries]);
 
     const mostPopularService = Object.entries(stats.serviceDistribution)
         .sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
