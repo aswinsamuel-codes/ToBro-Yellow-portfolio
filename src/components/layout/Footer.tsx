@@ -12,7 +12,7 @@ export default function Footer() {
                     <div className="col-span-1 md:col-span-1">
                         <Link href="/" className="flex items-center gap-2 mb-6 group">
                             <Image
-                                src="/logo.png"
+                                src="/logo.svg"
                                 alt="ToBro Logo"
                                 width={80}
                                 height={32}

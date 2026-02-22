@@ -1,0 +1,21 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer Outline (Black) -->
+  <path d="M40 80 Q40 60 60 60 L180 60 Q200 60 200 80 L200 120 L240 120 Q320 120 320 180 Q320 240 240 240 L60 240 Q40 240 40 220 Z" fill="black" />
+  
+  <!-- Inner Shape (White) -->
+  <path d="M50 90 Q50 75 65 75 L175 75 Q185 75 185 85 L185 135 L240 135 Q305 135 305 180 Q305 225 240 225 L65 225 Q50 225 50 210 Z" fill="white" />
+  
+  <!-- Stem of T (Inside White) -->
+  <rect x="50" y="115" width="100" height="110" fill="white" />
+  
+  <!-- Separation line or gap for TB (Black) -->
+  <rect x="150" y="115" width="10" height="110" fill="black" />
+
+  <!-- Smiley Face inside the 'B' area -->
+  <!-- Eyes -->
+  <ellipse cx="230" cy="170" rx="8" ry="12" fill="black" />
+  <ellipse cx="270" cy="170" rx="8" ry="12" fill="black" />
+  
+  <!-- Smile -->
+  <path d="M210 200 Q250 230 290 200" stroke="black" stroke-width="6" fill="none" stroke-linecap="round" />
+</svg>
