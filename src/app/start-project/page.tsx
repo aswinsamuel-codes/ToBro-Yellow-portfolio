@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function StartProject() {
     const [budget, setBudget] = useState("₹15,000 – ₹50,000 (Starter)");
@@ -31,35 +32,35 @@ export default function StartProject() {
         );
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate network delay
-        setTimeout(() => {
-            const newQuery = {
-                id: Date.now().toString(),
-                ...formData,
-                services,
-                budget,
-                status: "Pending",
-                date: new Date().toISOString().split('T')[0]
-            };
+        const { error } = await supabase.from('queries').insert([{
+            name: formData.name,
+            email: formData.email,
+            message: `${formData.company ? `Company: ${formData.company}\n` : ''}${formData.description}\nTimeline: ${formData.timeline}`,
+            service: services.join(", "),
+            budget: budget,
+        }]);
 
-            const existingQueries = JSON.parse(localStorage.getItem("projectQueries") || "[]");
-            localStorage.setItem("projectQueries", JSON.stringify([newQuery, ...existingQueries]));
-
+        if (error) {
+            console.error('Error saving project query:', error);
+            alert('Failed to submit request. Please try again.');
             setIsSubmitting(false);
-            setIsSuccess(true);
+            return;
+        }
 
-            // Reset form
-            setFormData({ name: "", email: "", company: "", description: "", timeline: "" });
-            setServices([]);
-            setBudget("₹35,000 – ₹70,000 (Starter)");
+        setIsSubmitting(false);
+        setIsSuccess(true);
 
-            // Reset success message after 3 seconds
-            setTimeout(() => setIsSuccess(false), 3000);
-        }, 1000);
+        // Reset form
+        setFormData({ name: "", email: "", company: "", description: "", timeline: "" });
+        setServices([]);
+        setBudget("₹35,000 – ₹70,000 (Starter)");
+
+        // Reset success message after 3 seconds
+        setTimeout(() => setIsSuccess(false), 3000);
     };
 
     return (

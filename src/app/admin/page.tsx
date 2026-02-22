@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/lib/supabase";
 import {
     LayoutDashboard,
     Users,
@@ -64,43 +65,80 @@ export default function AdminDashboard() {
     const router = useRouter();
 
     useEffect(() => {
-        const isAuthenticated = localStorage.getItem("isAdminAuthenticated");
+        const isAuthenticated = sessionStorage.getItem("isAdminAuthenticated");
         if (!isAuthenticated) {
             router.push("/admin/login");
             return;
         }
 
-        setUserEmail(localStorage.getItem("adminEmail") || "melvin@tobro.com");
-        setUserRole(localStorage.getItem("adminRole") || "Admin");
+        setUserEmail(sessionStorage.getItem("adminEmail") || "melvin@tobro.com");
+        setUserRole(sessionStorage.getItem("adminRole") || "Admin");
 
-        // Load queries from localStorage (Live Data Only)
-        const storedQueries = JSON.parse(localStorage.getItem("projectQueries") || "[]");
-        setQueries(storedQueries);
+        const fetchQueries = async () => {
+            const { data, error } = await supabase
+                .from('queries')
+                .select('*')
+                .order('created_at', { ascending: false });
 
+            if (error) {
+                console.error('Error fetching queries:', error);
+                return;
+            }
+
+            const formattedQueries: ProjectQuery[] = data.map(q => ({
+                id: q.id,
+                name: q.name || "N/A",
+                email: q.email || "N/A",
+                company: q.message?.includes("Company: ") ? q.message.split('\n')[0].replace("Company: ", "") : "N/A",
+                services: q.service ? q.service.split(', ') : [],
+                description: q.message || "",
+                budget: q.budget || "Basic",
+                timeline: q.message?.includes("Timeline: ") ? q.message.split('Timeline: ')[1] : "N/A",
+                status: (q.status || "Pending") as QueryStatus,
+                date: q.created_at ? q.created_at.split('T')[0] : ""
+            }));
+
+            setQueries(formattedQueries);
+        };
+
+        fetchQueries();
+
+        // Realtime subscription
+        const channel = supabase
+            .channel('queries-changes')
+            .on('postgres_changes',
+                { event: '*', schema: 'public', table: 'queries' },
+                () => fetchQueries()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [router]);
 
     const handleLogout = () => {
-        localStorage.removeItem("isAdminAuthenticated");
-        localStorage.removeItem("adminEmail");
-        localStorage.removeItem("adminRole");
+        sessionStorage.removeItem("isAdminAuthenticated");
+        sessionStorage.removeItem("adminEmail");
+        sessionStorage.removeItem("adminRole");
         router.push("/admin/login");
     };
 
     // Calculate Stats
     const stats = {
         total: queries.length,
-        pending: queries.filter(q => q.status === "Pending").length,
-        booked: queries.filter(q => q.status === "Booked").length,
-        completed: queries.filter(q => q.status === "Completed").length,
-        rejected: queries.filter(q => q.status === "Rejected").length,
-        upcoming: queries.filter(q => q.status === "Upcoming").length,
+        pending: queries.filter((q: ProjectQuery) => q.status === "Pending").length,
+        booked: queries.filter((q: ProjectQuery) => q.status === "Booked").length,
+        completed: queries.filter((q: ProjectQuery) => q.status === "Completed").length,
+        rejected: queries.filter((q: ProjectQuery) => q.status === "Rejected").length,
+        upcoming: queries.filter((q: ProjectQuery) => q.status === "Upcoming").length,
     };
 
-    const filteredQueries = queries.filter(q => {
+    const filteredQueries = queries.filter((q: ProjectQuery) => {
         const matchesStatus = filterStatus === "All" || q.status === filterStatus;
         const matchesSearch =
             q.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            q.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (q.company || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
             q.email.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesStatus && matchesSearch;
     });
@@ -320,11 +358,17 @@ export default function AdminDashboard() {
                                                         </button>
                                                         {userRole === "Admin" && (
                                                             <button
-                                                                onClick={() => {
+                                                                onClick={async () => {
                                                                     if (confirm("Delete this query?")) {
-                                                                        const updated = queries.filter(q => q.id !== query.id);
-                                                                        setQueries(updated);
-                                                                        localStorage.setItem("projectQueries", JSON.stringify(updated));
+                                                                        const { error } = await supabase
+                                                                            .from('queries')
+                                                                            .delete()
+                                                                            .eq('id', query.id);
+
+                                                                        if (error) {
+                                                                            console.error('Error deleting query:', error);
+                                                                            alert('Failed to delete query.');
+                                                                        }
                                                                     }
                                                                 }}
                                                                 className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -343,11 +387,11 @@ export default function AdminDashboard() {
                     </>
                 )}
 
-                {activeTab === "Clients" && <ClientsView />}
+                {activeTab === "Clients" && <ClientsView queries={queries} />}
                 {activeTab === "Users" && userRole === "Admin" && <UsersView />}
                 {activeTab === "Announcements" && <AnnouncementsView userRole={userRole} />}
                 {activeTab === "Testimonials" && <TestimonialsView userRole={userRole} />}
-                {activeTab === "Analytics" && <AnalyticsView />}
+                {activeTab === "Analytics" && <AnalyticsView queries={queries} />}
             </main>
 
             {/* Detail Modal */}
@@ -397,13 +441,19 @@ export default function AdminDashboard() {
                                         {["Pending", "Booked", "Upcoming", "Completed", "Rejected"].map((status) => (
                                             <button
                                                 key={status}
-                                                onClick={() => {
+                                                onClick={async () => {
                                                     if (userRole === "Staff") return;
-                                                    const updated = queries.map(q =>
-                                                        q.id === selectedQuery.id ? { ...q, status: status as QueryStatus } : q
-                                                    );
-                                                    setQueries(updated);
-                                                    setSelectedQuery({ ...selectedQuery, status: status as QueryStatus });
+                                                    const { error } = await supabase
+                                                        .from('queries')
+                                                        .update({ status: status })
+                                                        .eq('id', selectedQuery.id);
+
+                                                    if (error) {
+                                                        console.error('Error updating status:', error);
+                                                        alert('Failed to update status.');
+                                                    } else {
+                                                        setSelectedQuery({ ...selectedQuery, status: status as QueryStatus });
+                                                    }
                                                 }}
                                                 disabled={userRole === "Staff"}
                                                 className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all ${selectedQuery.status === status

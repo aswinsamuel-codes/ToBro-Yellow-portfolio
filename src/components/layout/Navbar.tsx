@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -17,34 +17,37 @@ export default function Navbar() {
             setScrolled(window.scrollY > 50);
         };
 
-        const checkBanner = () => {
-            const stored = localStorage.getItem("siteAnnouncement");
-            if (stored) {
-                const parsed = JSON.parse(stored);
-                setHasBanner(parsed && parsed.active);
+        const checkBanner = async () => {
+            const { data, error } = await supabase
+                .from('announcements')
+                .select('active')
+                .maybeSingle();
+
+            if (!error && data) {
+                setHasBanner(data.active);
             } else {
                 setHasBanner(false);
             }
         };
 
-        const handleKeyDown = (e: KeyboardEvent) => {
-            // Secret Shortcut: Shift + A
-            if (e.shiftKey && e.key.toLowerCase() === "a") {
-                router.push("/admin");
-            }
-        };
-
         window.addEventListener("scroll", handleScroll);
-        window.addEventListener("keydown", handleKeyDown);
+
         checkBanner();
-        const interval = setInterval(checkBanner, 2000);
+
+        // Realtime sync for banner presence
+        const channel = supabase
+            .channel('navbar-announcement-sync')
+            .on('postgres_changes',
+                { event: '*', schema: 'public', table: 'announcements' },
+                () => checkBanner()
+            )
+            .subscribe();
 
         return () => {
             window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("keydown", handleKeyDown);
-            clearInterval(interval);
+            supabase.removeChannel(channel);
         };
-    }, [router]);
+    }, []);
 
     if (pathname?.startsWith("/admin")) return null;
 

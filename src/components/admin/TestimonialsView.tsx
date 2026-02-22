@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { MessageSquareQuote, Trash2, Save, Star, User } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface Testimonial {
     id: string;
@@ -38,8 +39,46 @@ export default function TestimonialsView({ userRole }: { userRole?: string }) {
     const [isSaved, setIsSaved] = useState(false);
 
     useEffect(() => {
-        const stored = localStorage.getItem("siteTestimonials");
-        if (stored) setTestimonials(JSON.parse(stored));
+        const fetchTestimonials = async () => {
+            const { data, error } = await supabase
+                .from('testimonials')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching testimonials:', error);
+                return;
+            }
+
+            const formatted: Testimonial[] = data.map(t => ({
+                id: t.id,
+                clientName: t.client_name,
+                role: t.role || "",
+                industry: t.industry || "",
+                feedback: t.feedback,
+                impact: t.impact || "",
+                rating: t.rating || 5,
+                themeColor: t.theme_color || "#3b82f6",
+                date: t.created_at ? t.created_at.split('T')[0] : ""
+            }));
+
+            setTestimonials(formatted);
+        };
+
+        fetchTestimonials();
+
+        // Realtime subscription
+        const channel = supabase
+            .channel('admin-testimonials-sync')
+            .on('postgres_changes',
+                { event: '*', schema: 'public', table: 'testimonials' },
+                () => fetchTestimonials()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -47,18 +86,26 @@ export default function TestimonialsView({ userRole }: { userRole?: string }) {
         setForm(prev => ({ ...prev, [e.target.name]: value }));
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!form.clientName || !form.feedback) return;
 
-        const newTestimonial: Testimonial = {
-            id: Date.now().toString(),
-            ...form,
-            date: new Date().toISOString().split("T")[0],
-        };
+        const { error } = await supabase
+            .from('testimonials')
+            .insert([{
+                client_name: form.clientName,
+                role: form.role,
+                industry: form.industry,
+                feedback: form.feedback,
+                impact: form.impact,
+                rating: form.rating,
+                theme_color: form.themeColor,
+            }]);
 
-        const updated = [newTestimonial, ...testimonials];
-        setTestimonials(updated);
-        localStorage.setItem("siteTestimonials", JSON.stringify(updated));
+        if (error) {
+            console.error('Error saving testimonial:', error);
+            alert('Failed to save testimonial.');
+            return;
+        }
 
         setForm({
             clientName: "",
@@ -73,10 +120,18 @@ export default function TestimonialsView({ userRole }: { userRole?: string }) {
         setTimeout(() => setIsSaved(false), 2500);
     };
 
-    const handleDelete = (id: string) => {
-        const updated = testimonials.filter(t => t.id !== id);
-        setTestimonials(updated);
-        localStorage.setItem("siteTestimonials", JSON.stringify(updated));
+    const handleDelete = async (id: string) => {
+        if (!confirm("Delete this testimonial?")) return;
+
+        const { error } = await supabase
+            .from('testimonials')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting testimonial:', error);
+            alert('Failed to delete.');
+        }
     };
 
     return (

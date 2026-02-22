@@ -3,25 +3,40 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function AnnouncementBanner() {
     const [announcement, setAnnouncement] = useState<{ text: string; active: boolean } | null>(null);
     const pathname = usePathname();
 
     useEffect(() => {
-        // Poll for changes (simple way to sync across tabs/updates without context for now)
-        const checkAnnouncement = () => {
-            const stored = localStorage.getItem("siteAnnouncement");
-            if (stored) {
-                setAnnouncement(JSON.parse(stored));
-            } else {
-                setAnnouncement(null);
+        const fetchAnnouncement = async () => {
+            const { data, error } = await supabase
+                .from('announcements')
+                .select('*')
+                .maybeSingle();
+
+            if (error) {
+                console.error('Error fetching announcement:', error);
+                return;
             }
+            setAnnouncement(data);
         };
 
-        checkAnnouncement();
-        const interval = setInterval(checkAnnouncement, 2000); // Check every 2s
-        return () => clearInterval(interval);
+        fetchAnnouncement();
+
+        // Realtime subscription
+        const channel = supabase
+            .channel('announcement-sync')
+            .on('postgres_changes',
+                { event: '*', schema: 'public', table: 'announcements' },
+                () => fetchAnnouncement()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     // Don't show on admin pages

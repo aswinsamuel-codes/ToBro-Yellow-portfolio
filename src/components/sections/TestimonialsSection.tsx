@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Star, MessageSquareQuote } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface Testimonial {
     id: string;
@@ -19,14 +20,45 @@ export default function TestimonialsSection() {
     const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
     useEffect(() => {
-        const load = () => {
-            const stored = localStorage.getItem("siteTestimonials");
-            if (stored) setTestimonials(JSON.parse(stored));
-            else setTestimonials([]);
+        const fetchTestimonials = async () => {
+            const { data, error } = await supabase
+                .from('testimonials')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching testimonials:', error);
+                return;
+            }
+
+            const formatted: Testimonial[] = data.map(t => ({
+                id: t.id,
+                clientName: t.client_name,
+                role: t.role || "",
+                industry: t.industry || "",
+                feedback: t.feedback,
+                impact: t.impact || "",
+                rating: t.rating || 5,
+                themeColor: t.theme_color || "#3b82f6"
+            }));
+
+            setTestimonials(formatted);
         };
-        load();
-        const interval = setInterval(load, 2000);
-        return () => clearInterval(interval);
+
+        fetchTestimonials();
+
+        // Realtime subscription
+        const channel = supabase
+            .channel('testimonials-sync')
+            .on('postgres_changes',
+                { event: '*', schema: 'public', table: 'testimonials' },
+                () => fetchTestimonials()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     return (

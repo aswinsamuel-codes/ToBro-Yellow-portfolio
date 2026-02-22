@@ -1,35 +1,89 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Megaphone, Save, Trash2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function AnnouncementsView({ userRole }: { userRole?: string }) {
     const [text, setText] = useState("");
     const [isActive, setIsActive] = useState(false);
-    const [savedNotice, setSavedNotice] = useState<{ text: string; active: boolean } | null>(null);
+    const [savedNotice, setSavedNotice] = useState<{ id?: string; text: string; active: boolean } | null>(null);
 
     useEffect(() => {
-        const stored = localStorage.getItem("siteAnnouncement");
-        if (stored) {
-            const parsed = JSON.parse(stored);
-            setSavedNotice(parsed);
-            setText(parsed.text);
-            setIsActive(parsed.active);
-        }
+        const fetchAnnouncement = async () => {
+            const { data, error } = await supabase
+                .from('announcements')
+                .select('*')
+                .maybeSingle();
+
+            if (error) {
+                console.error('Error fetching announcement:', error);
+                return;
+            }
+
+            if (data) {
+                setSavedNotice(data);
+                setText(data.text);
+                setIsActive(data.active);
+            } else {
+                setSavedNotice(null);
+                setText("");
+                setIsActive(false);
+            }
+        };
+
+        fetchAnnouncement();
+
+        // Realtime sync for admin view
+        const channel = supabase
+            .channel('announcements-admin-sync')
+            .on('postgres_changes',
+                { event: '*', schema: 'public', table: 'announcements' },
+                () => fetchAnnouncement()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
-    const handleSave = () => {
-        const announcement = { text, active: isActive };
-        localStorage.setItem("siteAnnouncement", JSON.stringify(announcement));
-        setSavedNotice(announcement);
-        // Force update if needed? (other components poll, so this is fine)
+    const handleSave = async () => {
+        const { error } = await supabase
+            .from('announcements')
+            .upsert({
+                id: savedNotice?.id || undefined,
+                text,
+                active: isActive,
+                updated_at: new Date().toISOString()
+            })
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error saving announcement:', error);
+            alert('Failed to save announcement.');
+        } else {
+            // Success - state will be updated by the fetch in useEffect if we had one, 
+            // but for now we just update locally for speed
+            setSavedNotice({ text, active: isActive });
+        }
     };
 
-    const handleDelete = () => {
-        localStorage.removeItem("siteAnnouncement");
-        setSavedNotice(null);
-        setText("");
-        setIsActive(false);
+    const handleDelete = async () => {
+        if (!savedNotice?.id) return;
+
+        const { error } = await supabase
+            .from('announcements')
+            .delete()
+            .eq('id', savedNotice.id);
+
+        if (error) {
+            console.error('Error deleting announcement:', error);
+            alert('Failed to delete.');
+        } else {
+            setSavedNotice(null);
+            setText("");
+            setIsActive(false);
+        }
     };
 
     return (

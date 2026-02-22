@@ -23,20 +23,16 @@ interface Client {
     queries: ProjectQuery[];
 }
 
-export default function ClientsView() {
+export default function ClientsView({ queries }: { queries: ProjectQuery[] }) {
     const [clients, setClients] = useState<Client[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
     useEffect(() => {
         // Aggregate queries into unique clients by email
-        const storedQueries: ProjectQuery[] = JSON.parse(localStorage.getItem("projectQueries") || "[]");
-        // Also include mock data if needed, but assuming main page handles that sync or we just read localStorage
-        // For robustness, let's just use what's in localStorage + a few mocks if empty for demo
-
         const clientMap = new Map<string, Client>();
 
-        storedQueries.forEach(q => {
+        queries.forEach(q => {
             if (!clientMap.has(q.email)) {
                 clientMap.set(q.email, {
                     email: q.email,
@@ -48,13 +44,8 @@ export default function ClientsView() {
             clientMap.get(q.email)?.queries.push(q);
         });
 
-        // Add some mock clients if empty for visual
-        if (clientMap.size === 0) {
-            // ... logic to add mocks if we wanted, but sticking to logic
-        }
-
         setClients(Array.from(clientMap.values()));
-    }, []);
+    }, [queries]);
 
     const filteredClients = clients.filter(c =>
         c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -143,9 +134,9 @@ export default function ClientsView() {
                                             <div>
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <span className={`px-2 py-0.5 rounded-full text-xs font-bold border ${query.status === 'Completed' ? 'bg-green-100 text-green-700 border-green-200' :
-                                                            query.status === 'Booked' ? 'bg-blue-100 text-blue-700 border-blue-200' :
-                                                                query.status === 'Rejected' ? 'bg-red-100 text-red-700 border-red-200' :
-                                                                    'bg-yellow-100 text-yellow-700 border-yellow-200'
+                                                        query.status === 'Booked' ? 'bg-blue-100 text-blue-700 border-blue-200' :
+                                                            query.status === 'Rejected' ? 'bg-red-100 text-red-700 border-red-200' :
+                                                                'bg-yellow-100 text-yellow-700 border-yellow-200'
                                                         }`}>
                                                         {query.status}
                                                     </span>
