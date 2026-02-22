@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Mail, Instagram, Linkedin, Twitter, Check } from "lucide-react";
+import { ArrowRight, Mail, Instagram, Linkedin, Check } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export default function Contact() {
@@ -61,8 +61,7 @@ export default function Contact() {
                     <div className="flex gap-6">
                         {[
                             { icon: <Instagram />, href: "https://www.instagram.com/tobro.agency?igsh=MTIyaGR1dnFydzY5Yw==" },
-                            { icon: <Linkedin />, href: "https://www.linkedin.com/in/tobroagency" },
-                            { icon: <Twitter />, href: "#" }
+                            { icon: <Linkedin />, href: "https://www.linkedin.com/in/tobroagency" }
                         ].map((item, i) => (
                             <a
                                 key={i}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Twitter, Instagram, Linkedin, Github, Lock } from "lucide-react";
+import { Instagram, Linkedin, Github, Lock } from "lucide-react";
 
 export default function Footer() {
     const [clicks, setClicks] = useState(0);
@@ -63,9 +63,6 @@ export default function Footer() {
                     <div>
                         <h4 className="font-semibold text-primary mb-6">Connect</h4>
                         <div className="flex gap-4">
-                            <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
-                                <Twitter className="w-4 h-4" />
-                            </a>
                             <a href="https://www.instagram.com/tobro.agency?igsh=MTIyaGR1dnFydzY5Yw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
                                 <Instagram className="w-4 h-4" />
                             </a>
@@ -78,20 +75,20 @@ export default function Footer() {
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-xs text-secondary">
-                        &copy; {new Date().getFullYear()} ToBro Agency. All rights reserved.
-                    </p>
-                    <div className="flex gap-8 text-xs text-secondary">
-                        <span
-                            onClick={handleSecretClick}
-                            className="hover:text-primary transition-colors cursor-pointer select-none"
-                        >
-                            Privacy Policy
-                        </span>
-                        <Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link>
-                    </div>
+            <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p className="text-xs text-secondary">
+                    &copy; {new Date().getFullYear()} ToBro Agency. All rights reserved.
+                </p>
+                <div className="flex gap-8 text-xs text-secondary">
+                    <span
+                        onClick={handleSecretClick}
+                        className="hover:text-primary transition-colors cursor-pointer select-none"
+                    >
+                        Privacy Policy
+                    </span>
+                    <Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link>
                 </div>
             </div>
         </footer>
