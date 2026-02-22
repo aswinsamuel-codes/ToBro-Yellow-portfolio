@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Twitter, Instagram, Linkedin, Github, Lock } from "lucide-react";
 
 export default function Footer() {
@@ -9,8 +10,17 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                     <div className="col-span-1 md:col-span-1">
-                        <Link href="/" className="text-xl font-semibold tracking-tight text-primary mb-6 block">
-                            ToBro<span className="text-secondary">.</span>
+                        <Link href="/" className="flex items-center gap-2 mb-6 group">
+                            <Image
+                                src="/logo.png"
+                                alt="ToBro Logo"
+                                width={32}
+                                height={32}
+                                className="w-8 h-auto"
+                            />
+                            <span className="text-xl font-semibold tracking-tight text-primary">
+                                ToBro<span className="text-secondary">.</span>
+                            </span>
                         </Link>
                         <p className="text-secondary text-sm leading-relaxed max-w-xs">
                             Premium digital experiences for forward-thinking brands. We build the future.
@@ -43,10 +53,10 @@ export default function Footer() {
                             <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
                                 <Twitter className="w-4 h-4" />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
+                            <a href="https://www.instagram.com/tobro.agency?igsh=MTIyaGR1dnFydzY5Yw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
                                 <Instagram className="w-4 h-4" />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
+                            <a href="https://www.linkedin.com/in/tobroagency" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">
                                 <Linkedin className="w-4 h-4" />
                             </a>
                             <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-all">

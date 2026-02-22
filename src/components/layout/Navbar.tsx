@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
@@ -54,8 +55,18 @@ export default function Navbar() {
         >
             <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="text-2xl font-bold tracking-tight text-[#1d1d1f]">
-                    ToBro<span className="text-gray-400">.</span>
+                <Link href="/" className="flex items-center gap-2">
+                    <Image
+                        src="/logo.png"
+                        alt="ToBro Logo"
+                        width={40}
+                        height={40}
+                        className="w-10 h-auto"
+                        priority
+                    />
+                    <span className="text-2xl font-bold tracking-tight text-[#1d1d1f]">
+                        ToBro<span className="text-gray-400">.</span>
+                    </span>
                 </Link>
 
                 {/* Desktop Nav */}
