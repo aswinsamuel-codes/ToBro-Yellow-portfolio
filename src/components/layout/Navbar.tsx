@@ -59,9 +59,9 @@ export default function Navbar() {
                     <Image
                         src="/logo.svg"
                         alt="ToBro Logo"
-                        width={120}
-                        height={40}
-                        className="h-10 w-auto object-contain"
+                        width={180}
+                        height={60}
+                        className="h-12 w-auto object-contain"
                         priority
                     />
                     <span className="text-2xl font-bold tracking-tight text-[#1d1d1f]">

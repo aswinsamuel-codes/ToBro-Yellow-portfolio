@@ -1,21 +1,23 @@
-<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-  <!-- Outer Outline (Black) -->
-  <path d="M40 80 Q40 60 60 60 L180 60 Q200 60 200 80 L200 120 L240 120 Q320 120 320 180 Q320 240 240 240 L60 240 Q40 240 40 220 Z" fill="black" />
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Style for pixel art look if desired, but here we go for sharp clean lines -->
   
-  <!-- Inner Shape (White) -->
-  <path d="M50 90 Q50 75 65 75 L175 75 Q185 75 185 85 L185 135 L240 135 Q305 135 305 180 Q305 225 240 225 L65 225 Q50 225 50 210 Z" fill="white" />
+  <!-- Outer Outline (Black Thick) -->
+  <path d="M40 60 H180 V100 H300 Q340 100 340 140 Q340 180 300 180 H240 Q340 180 340 220 Q340 260 300 260 H60 Q40 260 40 240 V60" 
+        fill="black" />
   
-  <!-- Stem of T (Inside White) -->
-  <rect x="50" y="115" width="100" height="110" fill="white" />
-  
-  <!-- Separation line or gap for TB (Black) -->
-  <rect x="150" y="115" width="10" height="110" fill="black" />
+  <!-- Inner Body (White) -->
+  <path d="M55 75 H165 V115 H285 Q310 115 310 142 Q310 165 285 165 H220 Q310 165 310 205 Q310 245 270 245 H70 Q55 245 55 230 V75" 
+        fill="white" />
 
-  <!-- Smiley Face inside the 'B' area -->
-  <!-- Eyes -->
-  <ellipse cx="230" cy="170" rx="8" ry="12" fill="black" />
-  <ellipse cx="270" cy="170" rx="8" ry="12" fill="black" />
+  <!-- Vertical bar for the 'T' stem and separation -->
+  <rect x="55" y="115" width="40" height="115" fill="white" />
+  <rect x="135" y="115" width="30" height="130" fill="white" />
   
-  <!-- Smile -->
-  <path d="M210 200 Q250 230 290 200" stroke="black" stroke-width="6" fill="none" stroke-linecap="round" />
+  <!-- Smiley inside the B -->
+  <!-- Eyes -->
+  <rect x="220" y="145" width="12" height="20" fill="black" />
+  <rect x="270" y="145" width="12" height="20" fill="black" />
+  
+  <!-- Mouth -->
+  <path d="M195 195 Q245 240 295 195" stroke="black" stroke-width="10" fill="none" stroke-linecap="round" />
 </svg>
