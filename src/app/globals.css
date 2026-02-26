@@ -9,27 +9,55 @@
 }
 
 @layer base {
+  html {
+    /* Enable GPU acceleration for the entire page */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
   body {
     color: rgb(var(--foreground-rgb));
     background: #F5F5F7;
     font-feature-settings: "rlig" 1, "calt" 1;
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Optimize text rendering */
+    text-rendering: optimizeLegibility;
+    /* Prevent layout shift */
+    scrollbar-gutter: stable;
+  }
+
+  /* Optimize all interactive elements for fast response */
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    /* Enable GPU acceleration for transforms */
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
   }
 }
 
 @layer utilities {
   .glass-nav {
     @apply bg-white/20 backdrop-blur-3xl border-b border-white/10;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
   }
 
   .glass-nav-active {
     @apply bg-white/70 backdrop-blur-2xl border-b border-white/20 shadow-sm;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
   }
 
   .glass-card {
     @apply bg-white/60 backdrop-blur-xl rounded-[32px] shadow-apple border border-white/40;
     will-change: transform;
+    backface-visibility: hidden;
   }
 
   /* 3D Book Effects */
@@ -52,12 +80,75 @@
   .rotate-y-180-neg {
     transform: rotateY(-180deg);
   }
+
+  /* Performance optimizations for smooth scrolling and animations */
+  .smooth-scroll-container {
+    will-change: scroll-position;
+    backface-visibility: hidden;
+  }
+
+  .animation-container {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Fast button interactions */
+  .btn-fast {
+    transition-duration: 100ms;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+  }
+
+  .btn-fast:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-fast:active {
+    transform: translateY(0);
+  }
+
+  /* Optimize transitions for 120fps */
+  .fast-transition {
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Framer motion optimization */
+  .motion-safe {
+    @apply transition-all duration-150;
+  }
+
+  /* Reduce motion for performance */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* GPU accelerated transforms */
+  .gpu-fast-transform {
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+
+  /* Optimize opacity changes */
+  .opacity-fast {
+    will-change: opacity;
+    backface-visibility: hidden;
+  }
 }
 
-/* Lenis smooth scroll */
+/* Lenis smooth scroll - optimized */
 html.lenis,
 html.lenis body {
   height: auto;
+  /* Enable GPU acceleration */
+  transform: translateZ(0);
 }
 
 .lenis.lenis-smooth {
@@ -74,4 +165,19 @@ html.lenis body {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* Content visibility for off-screen elements */
+@supports (content-visibility: auto) {
+  section:not(:first-child) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 800px;
+  }
+}
+
+/* Contain layout for better performance */
+@supports (contain: layout) {
+  .contained-section {
+    contain: layout style paint;
+  }
 }

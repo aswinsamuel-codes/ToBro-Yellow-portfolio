@@ -26,7 +26,8 @@ import {
     ExternalLink,
     BarChart3,
     Info,
-    Trash2
+    Trash2,
+    Eye
 } from "lucide-react";
 
 import ClientsView from "@/components/admin/ClientsView";
@@ -34,6 +35,7 @@ import UsersView from "@/components/admin/UsersView";
 import AnnouncementsView from "@/components/admin/AnnouncementsView";
 import TestimonialsView from "@/components/admin/TestimonialsView";
 import AnalyticsView from "@/components/admin/AnalyticsView";
+import VisitorsView from "@/components/admin/VisitorsView";
 
 // Mock Data Types
 type QueryStatus = "Pending" | "Booked" | "Completed" | "Rejected" | "Upcoming";
@@ -55,7 +57,7 @@ interface ProjectQuery {
 // Live Data Only
 
 export default function AdminDashboard() {
-    const [activeTab, setActiveTab] = useState<"Dashboard" | "Clients" | "Users" | "Announcements" | "Testimonials" | "Analytics">("Dashboard");
+    const [activeTab, setActiveTab] = useState<"Dashboard" | "Clients" | "Users" | "Announcements" | "Testimonials" | "Analytics" | "Visitors">("Dashboard");
     const [queries, setQueries] = useState<ProjectQuery[]>([]);
     const [filterStatus, setFilterStatus] = useState<QueryStatus | "All">("All");
     const [searchTerm, setSearchTerm] = useState("");
@@ -208,6 +210,13 @@ export default function AdminDashboard() {
                     >
                         <MessageSquareQuote className="w-5 h-5" />
                         Testimonials
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("Visitors")}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${activeTab === "Visitors" ? "bg-[#1d1d1f] text-white shadow-sm" : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"}`}
+                    >
+                        <Eye className="w-5 h-5" />
+                        Visitors
                     </button>
 
                     <div className="pt-4 mt-4 border-t border-gray-100">
@@ -392,6 +401,7 @@ export default function AdminDashboard() {
                 {activeTab === "Announcements" && <AnnouncementsView userRole={userRole} />}
                 {activeTab === "Testimonials" && <TestimonialsView userRole={userRole} />}
                 {activeTab === "Analytics" && <AnalyticsView queries={queries} />}
+                {activeTab === "Visitors" && <VisitorsView />}
             </main>
 
             {/* Detail Modal */}

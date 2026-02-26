@@ -2,29 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Instagram, Linkedin, Github, Lock } from "lucide-react";
+import { Instagram, Linkedin, Github } from "lucide-react";
 
 export default function Footer() {
-    const [clicks, setClicks] = useState(0);
-    const router = useRouter();
-
-    const handleSecretClick = (e: React.MouseEvent) => {
-        if (e.detail > 0) {
-            setClicks(prev => {
-                const next = prev + 1;
-                if (next === 3) {
-                    router.push("/admin");
-                    return 0;
-                }
-                return next;
-            });
-            const timeout = setTimeout(() => setClicks(0), 1000);
-            return () => clearTimeout(timeout);
-        }
-    };
-
     return (
         <footer className="bg-white border-t border-gray-100 py-16 px-6">
             <div className="max-w-7xl mx-auto">
@@ -82,12 +62,7 @@ export default function Footer() {
                     &copy; {new Date().getFullYear()} ToBro Agency. All rights reserved.
                 </p>
                 <div className="flex gap-8 text-xs text-secondary">
-                    <span
-                        onClick={handleSecretClick}
-                        className="hover:text-primary transition-colors cursor-pointer select-none"
-                    >
-                        Privacy Policy
-                    </span>
+                    <Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link>
                     <Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link>
                 </div>
             </div>

@@ -12,6 +12,8 @@ export const metadata: Metadata = {
 
 import Navbar from "@/components/layout/Navbar";
 import AnnouncementBanner from "@/components/layout/AnnouncementBanner";
+import AdminShortcutListener from "@/components/layout/AdminShortcutListener";
+import VisitorTracker from "@/components/layout/VisitorTracker";
 
 export default function RootLayout({
     children,
@@ -21,6 +23,8 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={cn(inter.className, "antialiased bg-gray-50 text-gray-900 overflow-x-hidden")}>
+                <VisitorTracker />
+                <AdminShortcutListener />
                 <AnnouncementBanner />
                 <Navbar />
                 {children}

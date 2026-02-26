@@ -29,8 +29,47 @@ const config: Config = {
                 "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
                 "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
             },
+            // GPU acceleration utilities
+            willChange: {
+                "auto": "auto",
+                "scroll": "scroll-position",
+                "contents": "contents",
+                "transform": "transform",
+                "opacity": "opacity",
+                "animation": "animation",
+            },
+            // Fast transitions for smooth interactions
+            transitionDuration: {
+                "100": "100ms",
+                "150": "150ms",
+                "200": "200ms",
+            },
         },
     },
-    plugins: [],
+    plugins: [
+        // Add GPU acceleration plugin
+        function ({ addUtilities }: any) {
+            const newUtilities = {
+                '.gpu-accelerate': {
+                    'transform': 'translateZ(0)',
+                    'backface-visibility': 'hidden',
+                    'perspective': '1000px',
+                },
+                '.smooth-gpu': {
+                    'transform': 'translate3d(0, 0, 0)',
+                    'will-change': 'transform',
+                    'backface-visibility': 'hidden',
+                },
+                '.smooth-opacity': {
+                    'will-change': 'opacity',
+                },
+                '.performance-mode': {
+                    'image-rendering': 'crisp-edges',
+                    'text-rendering': 'geometricPrecision',
+                },
+            };
+            addUtilities(newUtilities);
+        },
+    ],
 };
 export default config;
