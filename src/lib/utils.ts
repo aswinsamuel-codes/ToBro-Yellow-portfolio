@@ -26,12 +26,12 @@ export function throttle<T extends (...args: any[]) => any>(
                 timeout = null;
             }
             previous = now;
-            func.apply(this, args);
+            func(...args);
         } else if (!timeout) {
             timeout = setTimeout(() => {
                 previous = Date.now();
                 timeout = null;
-                func.apply(this, args);
+                func(...args);
             }, remaining);
         }
     };
@@ -50,7 +50,7 @@ export function debounce<T extends (...args: any[]) => any>(
     return function executedFunction(...args: Parameters<T>) {
         const later = () => {
             timeout = null;
-            func.apply(this, args);
+            func(...args);
         };
 
         if (timeout) clearTimeout(timeout);
@@ -77,7 +77,7 @@ export function rafDebounce<T extends (...args: any[]) => any>(
 
         rafId = requestAnimationFrame(() => {
             if (lastArgs) {
-                func.apply(this, lastArgs);
+                func(...lastArgs);
             }
             rafId = null;
         });
